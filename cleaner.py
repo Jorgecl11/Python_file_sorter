@@ -28,6 +28,14 @@ with open(log_file, "a", encoding="utf-8") as log: #utf-8 handles special charac
             old_path = os.path.join(folder_path, file_name)
             new_path = os.path.join(target_folder, file_name)
             
+            #--check for duplicate files--
+            if os.path.exists(new_path):
+                #split the name and the extension
+                name, extension = os.path.splitext(file_name)
+                unique_suffix = datetime.now().strftime("Copy_%H%M%S")
+                file_name = f"{name}_{unique_suffix}{extension}"
+                new_path = os.path.join(target_folder, file_name)
+            #--Duplicate check end--
             try:
                 shutil.move(old_path, new_path)
             
