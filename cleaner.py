@@ -23,16 +23,18 @@ with open(log_file, "a", encoding="utf-8") as log: #utf-8 handles special charac
     for file_name in files:
         #look for .ppt or .pptx
         if file_name.lower().endswith((".ppt", ".pptx")):
+
+            now = datetime.now()
             #get the current time for the log.
-            timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+            timestamp = now.strftime("%Y-%m-%d %H:%M:%S")
             old_path = os.path.join(folder_path, file_name)
             new_path = os.path.join(target_folder, file_name)
-            
+        
             #--check for duplicate files--
             if os.path.exists(new_path):
                 #split the name and the extension
                 name, extension = os.path.splitext(file_name)
-                unique_suffix = datetime.now().strftime("Copy_%H%M%S")
+                unique_suffix = now.strftime("Copy_%H%M%S")
                 file_name = f"{name}_{unique_suffix}{extension}"
                 new_path = os.path.join(target_folder, file_name)
             #--Duplicate check end--
@@ -45,3 +47,4 @@ with open(log_file, "a", encoding="utf-8") as log: #utf-8 handles special charac
                 print(log_entry.strip())
             except Exception as e:
                 print(f"Error moving {file_name}: {e}")
+  
