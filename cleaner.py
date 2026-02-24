@@ -27,9 +27,13 @@ with open(log_file, "a", encoding="utf-8") as log: #utf-8 handles special charac
             timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
             old_path = os.path.join(folder_path, file_name)
             new_path = os.path.join(target_folder, file_name)
-            shutil.move(old_path, new_path)
             
-            #write to the file and the terminal
-            log_entry = f"[{timestamp}] MOVED: {file_name}\n"
-            log.write(log_entry)
-            print(log_entry.strip())
+            try:
+                shutil.move(old_path, new_path)
+            
+                #write to the file and the terminal
+                log_entry = f"[{timestamp}] MOVED: {file_name}\n"
+                log.write(log_entry)
+                print(log_entry.strip())
+            except Exception as e:
+                print(f"Error moving {file_name}: {e}")
