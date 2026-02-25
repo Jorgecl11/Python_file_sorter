@@ -18,18 +18,23 @@ if not os.path.exists(target_folder):
 
 files = os.listdir(folder_path)
 
+#initialize the flag to False before looking at any files.
+files_found = False
+
 #'a' appends at the end of the file instead of overwriting it.
 with open(log_file, "a", encoding="utf-8") as log: #utf-8 handles special characters
     for file_name in files:
         #look for .ppt or .pptx
         if file_name.lower().endswith((".ppt", ".pptx")):
+            #if any files found this if block executes.
+            files_found = True
 
             now = datetime.now()
             #get the current time for the log.
             timestamp = now.strftime("%Y-%m-%d %H:%M:%S")
             old_path = os.path.join(folder_path, file_name)
             new_path = os.path.join(target_folder, file_name)
-        
+
             #--check for duplicate files--
             if os.path.exists(new_path):
                 #split the name and the extension
@@ -47,4 +52,6 @@ with open(log_file, "a", encoding="utf-8") as log: #utf-8 handles special charac
                 print(log_entry.strip())
             except Exception as e:
                 print(f"Error moving {file_name}: {e}")
+if not files_found:
+    print(f"No PowerPoint files found in {folder_path}.")
   
