@@ -23,13 +23,26 @@ log_file = os.path.join(folder_path, "activity_log.txt") # the new log file.
 print(f"Service started. Monitoring {folder_path}... (Ctrl+C to stop.)")
 
 
+def is_file_stable(path, wait_seconds=1):
+    """Return true if file size stays the same over wait_seconds"""
+    try:
+        size1 = os.path.getsize(path)
+        time.sleep(wait_seconds)
+        size2 = os.path.getsize(path)
+        return size1 == size2
+    except FileNotFoundError:
+        return False
+
+previously_found = None
 #The Infinite Loop
 while True:
     files = os.listdir(folder_path)
     files_found = False
+
     #'a' appends at the end of the file instead of overwriting it.
     with open(log_file, "a", encoding="utf-8") as log: #utf-8 handles special characters
         for file_name in files:
+            #skips ms office temporary/locked files
             if file_name.startswith("~$"):
                 continue
             name, extension = os.path.splitext(file_name)
@@ -60,11 +73,17 @@ while True:
                 if os.path.exists(new_path):
                     #split the name and the extension
                     name, extension = os.path.splitext(file_name)
-                    unique_suffix = now.strftime("Copy_%H%M%S")
+                    unique_suffix = now.strftime("Copy_%H%M%S_%f")
                     file_name = f"{name}_{unique_suffix}{extension}"
                     new_path = os.path.join(current_target_path, file_name)
-                #--Duplicate check end--
+                    #--Duplicate check end--
+
+                #skip files that are being written or downloaded.
+                if not is_file_stable(old_path, 1):
+                    continue
+
                 try:
+                    #raise Exception("Test failure triggered intentionally")
                     shutil.move(old_path, new_path)
                 
                     #write to the file and the terminal
@@ -72,9 +91,16 @@ while True:
                     log.write(log_entry)
                     print(log_entry.strip())
                 except Exception as e:
-                    print(f"Error moving {file_name}: {e}")
-    if not files_found:
-        print(f"[{datetime.now().strftime('%H:%M:%S')}] Scan complete: No matching files found.")
+                    error_entry = f"[{timestamp}] Error moving {file_name}: {e}\n"
+                    log.write(error_entry)
+                    print(error_entry.strip())
+
+    if previously_found is None or files_found != previously_found:
+        if not files_found:
+            print(f"[{datetime.now().strftime('%H:%M:%S')}] No matching files found.")
+        else:
+            print(f"[{datetime.now().strftime('%H:%M:%S')}] Matching files found.")
+    previously_found = files_found
   
 
     time.sleep(60)
