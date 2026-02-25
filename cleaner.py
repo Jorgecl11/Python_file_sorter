@@ -9,6 +9,7 @@ FILE_MAP = {
     ".docx" : "Word_Backups",
     ".xlsx" : "Excel_Backups",
     ".csv" : "Excel_Backups",
+    ".xls" : "Excel_Backups",
     ".ppt" : "PowerPoint_Backups",
     ".pptx": "PowerPoint_Backups",
     ".png" : "Images_backups",
@@ -18,8 +19,6 @@ FILE_MAP = {
 #This finds your 'user' folder automatically.
 home = os.path.expanduser("~")
 folder_path = os.path.join(home, "Downloads")
-#this will create a folder inside downloads to keep it neat.
-target_folder = os.path.join(folder_path, "PowerPoint_Backups")
 log_file = os.path.join(folder_path, "activity_log.txt") # the new log file.
 print(f"Service started. Monitoring {folder_path}... (Ctrl+C to stop.)")
 
@@ -31,6 +30,8 @@ while True:
     #'a' appends at the end of the file instead of overwriting it.
     with open(log_file, "a", encoding="utf-8") as log: #utf-8 handles special characters
         for file_name in files:
+            if file_name.startswith("~$"):
+                continue
             name, extension = os.path.splitext(file_name)
             extension = extension.lower() 
             
@@ -50,6 +51,9 @@ while True:
                 timestamp = now.strftime("%Y-%m-%d %H:%M:%S")
 
                 old_path = os.path.join(folder_path, file_name)
+                #skip folders
+                if os.path.isdir(old_path):
+                    continue
                 new_path = os.path.join(current_target_path, file_name)
 
                 #--check for duplicate files--
