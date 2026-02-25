@@ -1,7 +1,7 @@
 import os
-import shutil # used to move files
-import time #needed for sleep timers
-from datetime import datetime #This imports the datetime library for timestamps
+import shutil
+import time
+from datetime import datetime
 
 
 FILE_MAP = {
@@ -64,7 +64,7 @@ while True:
                     shutil.move(old_path, new_path)
                 
                     #write to the file and the terminal
-                    log_entry = f"[{timestamp}] MOVED: {file_name}\n"
+                    log_entry = f"[{timestamp}] MOVED: {file_name} to folder: {current_target_path}\n"
                     log.write(log_entry)
                     print(log_entry.strip())
                 except Exception as e:
