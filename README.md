@@ -1,21 +1,25 @@
-# 📂 Python File Sorter (PowerPoint Edition)
+# 📂 Python File Sorter
 
-A lightweight, portable Python script that monitors your Downloads folder and automatically organizes PowerPoint presentations into a dedicated backup folder. 
+A Python script that watches your Downloads folder and automatically moves supported files into organized backup folders.
 
-
+I built this project to practice file automation with Python and create something actually useful for everyday cleanup.
 
 ## 🚀 Features
-* **Portable Pathing:** Uses `os.path.expanduser` to work on any machine without hardcoded usernames.
-* **Smart Detection:** Catches both `.ppt` and `.pptx` extensions using case-insensitive logic.
-* **PII-Safe:** Designed to be shared on GitHub without exposing personal user information.
-* **Automated Cleanup:** (In Progress) Will eventually run as a background service.
+- Uses your home directory automatically, so there are no hardcoded usernames
+- Sorts supported files into the right folder based on file type
+- Handles duplicates by renaming files instead of overwriting them
+- Checks that a file is fully downloaded or finished writing before moving it
+- Logs file moves and errors to help track what happened
+- Safe to share on GitHub without exposing personal information
 
 ## 🛠️ Built With
-* **Python 3.10+**
-* **OS Library:** For directory navigation and path joining.
-* **Shutil Library:** For high-level file operations.
+- Python 3.10+
+- `os` for file paths and folder handling
+- `shutil` for moving files
+- `time` for file checks and scan intervals
+- `datetime` for timestamps and logging
 
 ## 📦 How to Use
-1. Clone this repository:
+1. Clone the repository:
    ```bash
-   git clone [https://github.com/Jorgecl11/Python_file_sorter.git](https://github.com/Jorgecl11/Python_file_sorter.git)
+   git clone https://github.com/Jorgecl11/Python_file_sorter.git
